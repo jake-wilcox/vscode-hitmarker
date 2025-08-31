@@ -1,0 +1,55 @@
+{
+  "name": "vscode-hitmarker",
+  "displayName": "VSCode Hitmarker",
+  "description": "Call of Duty style hitmarker effect when clicking in the editor",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "hitmarker.toggle",
+        "title": "Toggle Hitmarker"
+      }
+    ],
+    "configuration": {
+      "title": "Hitmarker",
+      "properties": {
+        "hitmarker.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable hitmarker effects"
+        },
+        "hitmarker.soundEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable hitmarker sound"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "typescript": "^4.9.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/vscode-hitmarker.git"
+  },
+  "publisher": "your-publisher-name",
+  "license": "MIT"
+}
