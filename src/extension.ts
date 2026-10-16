@@ -84,8 +84,9 @@ class HitmarkerManager implements vscode.Disposable {
             }
 
             const panel = this.ensureAudioPanel();
-            // Reveal without focus so it's not disruptive
-            panel.reveal(vscode.ViewColumn.Two, true);
+            const shouldFocus = !this.isAudioUnlocked;
+            // Focus the panel until audio is unlocked so the user can click the button
+            panel.reveal(vscode.ViewColumn.Two, !shouldFocus);
             panel.webview.postMessage({ type: 'play' });
 
             if (!this.isAudioUnlocked && !this.hasPromptedUnlock) {
@@ -181,9 +182,10 @@ class HitmarkerManager implements vscode.Disposable {
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>Hitmarker Audio</title>
             <style>
-                html,body{background:transparent;margin:0;padding:0;}
-                #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
-                #unlock{pointer-events:auto;display:none;padding:6px 10px;border:1px solid #888;border-radius:6px;background:#1e1e1e;color:#fff;font-size:12px;}
+                html,body{background:var(--vscode-editor-background,#1e1e1e);color:var(--vscode-editor-foreground,#ffffff);margin:0;padding:0;font-family:var(--vscode-font-family, system-ui), sans-serif;}
+                #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:12px;}
+                #msg{opacity:0.9;text-align:center;font-size:12px;}
+                #unlock{display:none;padding:6px 10px;border:1px solid var(--vscode-button-border,#888);border-radius:6px;background:var(--vscode-button-background,#0e639c);color:var(--vscode-button-foreground,#ffffff);font-size:12px;cursor:pointer;}
                 #unlock.show{display:inline-block;}
             </style>
         </head>
@@ -191,7 +193,10 @@ class HitmarkerManager implements vscode.Disposable {
             <audio id="sfx" preload="auto">
                 <source src="${src}" type="audio/mpeg" />
             </audio>
-            <div id="wrap"><button id="unlock" class="show">Enable sound</button></div>
+            <div id="wrap">
+                <div id="msg">Click the button once to enable sound for this session.</div>
+                <button id="unlock" class="show">Enable sound</button>
+            </div>
             <script>
                 const vscode = acquireVsCodeApi();
                 const audio = document.getElementById('sfx');
